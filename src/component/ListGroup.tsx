@@ -15,10 +15,14 @@ export default function ListGroup( ) {
 
   useEffect(() => {
 
+    const controller = new AbortController();
+
     const fetchUser = async () => {
 
       try {
-        const response = await fetch('https://dummyjson.com/users');
+        const response = await fetch('https://dummyjson.com/users' , {
+        signal: controller.signal,
+      });
         const data = await response.json();
         const dataUsers : User[] = data.users
         console.log(dataUsers)
@@ -31,7 +35,9 @@ export default function ListGroup( ) {
 
     fetchUser();
 
-    }, []);
+    return () => controller.abort(); // cleanup
+
+    } , []);
 
 
     return ( 
